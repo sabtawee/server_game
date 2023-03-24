@@ -1,0 +1,1519 @@
+generator client {
+  provider = "prisma-client-js"
+  timezone = "Asia/Bangkok"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model login {
+  account_id             Int       @id @default(autoincrement()) @db.UnsignedInt
+  userid                 String    @default("") @db.VarChar(23)
+  user_pass              String    @default("") @db.VarChar(32)
+  sex                    String    @default("M")
+  email                  String    @default("") @db.VarChar(39)
+  group_id               Int       @default(0) @db.TinyInt
+  state                  Int       @default(0) @db.UnsignedInt
+  unban_time             Int       @default(0) @db.UnsignedInt
+  expiration_time        Int       @default(0) @db.UnsignedInt
+  logincount             Int       @default(0) @db.UnsignedMediumInt
+  lastlogin              DateTime? @db.DateTime(0)
+  last_ip                String    @default("") @db.VarChar(100)
+  birthdate              DateTime? @db.Date
+  character_slots        Int       @default(0) @db.UnsignedTinyInt
+  pincode                String    @default("") @db.VarChar(4)
+  pincode_change         Int       @default(0) @db.UnsignedInt
+  vip_time               Int       @default(0) @db.UnsignedInt
+  old_group              Int       @default(0) @db.TinyInt
+  donate_level           Int       @default(0)
+  web_auth_token         String?   @unique(map: "web_auth_token_key") @db.VarChar(17)
+  web_auth_token_enabled Int       @default(0) @db.TinyInt
+  facebookname           String?   @db.Text
+  facebooklink           String?   @db.VarChar(255)
+  facebookphoto          String?   @db.Text
+  last_unique_id         Int       @default(0) @db.UnsignedInt
+  blocked_unique_id      Int       @default(0) @db.UnsignedInt
+}
+
+model donate {
+  id             Int      @id @default(autoincrement()) @db.UnsignedInt
+  userid         String   @db.VarChar(23)
+  account_id     Int
+  amount         Int      @db.UnsignedInt
+  status         Boolean
+  added_time     DateTime @db.DateTime(0)
+  claim_time     DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.Timestamp(0)
+  referenceNo    String   @db.VarChar(15)
+  gbpReferenceNo String   @db.VarChar(250)
+}
+
+// model acc_reg_num {
+//   account_id Int    @default(0) @db.UnsignedInt
+//   key        String @default("") @db.VarChar(32)
+//   index      Int    @default(0) @db.UnsignedInt
+//   value      BigInt @default(0)
+
+//   @@id([account_id, key, index])
+//   @@index([account_id], map: "account_id")
+// }
+
+// model acc_reg_str {
+//   account_id Int    @default(0) @db.UnsignedInt
+//   key        String @default("") @db.VarChar(32)
+//   index      Int    @default(0) @db.UnsignedInt
+//   value      String @default("0") @db.VarChar(254)
+
+//   @@id([account_id, key, index])
+//   @@index([account_id], map: "account_id")
+// }
+
+// model achievement {
+//   char_id   Int       @default(0) @db.UnsignedInt
+//   id        BigInt    @db.UnsignedBigInt
+//   count1    Int       @default(0) @db.UnsignedInt
+//   count2    Int       @default(0) @db.UnsignedInt
+//   count3    Int       @default(0) @db.UnsignedInt
+//   count4    Int       @default(0) @db.UnsignedInt
+//   count5    Int       @default(0) @db.UnsignedInt
+//   count6    Int       @default(0) @db.UnsignedInt
+//   count7    Int       @default(0) @db.UnsignedInt
+//   count8    Int       @default(0) @db.UnsignedInt
+//   count9    Int       @default(0) @db.UnsignedInt
+//   count10   Int       @default(0) @db.UnsignedInt
+//   completed DateTime? @db.DateTime(0)
+//   rewarded  DateTime? @db.DateTime(0)
+
+//   @@id([char_id, id])
+//   @@index([char_id], map: "char_id")
+// }
+
+// model atcommandlog {
+//   atcommand_id   Int      @id @default(autoincrement()) @db.UnsignedMediumInt
+//   atcommand_date DateTime @db.DateTime(0)
+//   account_id     Int      @default(0) @db.UnsignedInt
+//   char_id        Int      @default(0) @db.UnsignedInt
+//   char_name      String   @default("") @db.VarChar(25)
+//   map            String   @default("") @db.VarChar(11)
+//   command        String   @default("") @db.VarChar(255)
+
+//   @@index([account_id], map: "account_id")
+//   @@index([char_id], map: "char_id")
+// }
+
+// model auction {
+//   auction_id   BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+//   seller_id    Int    @default(0) @db.UnsignedInt
+//   seller_name  String @default("") @db.VarChar(30)
+//   buyer_id     Int    @default(0) @db.UnsignedInt
+//   buyer_name   String @default("") @db.VarChar(30)
+//   price        Int    @default(0) @db.UnsignedInt
+//   buynow       Int    @default(0) @db.UnsignedInt
+//   hours        Int    @default(0) @db.SmallInt
+//   timestamp    Int    @default(0) @db.UnsignedInt
+//   nameid       Int    @default(0) @db.UnsignedInt
+//   item_name    String @default("") @db.VarChar(50)
+//   type         Int    @default(0) @db.SmallInt
+//   refine       Int    @default(0) @db.UnsignedTinyInt
+//   attribute    Int    @default(0) @db.UnsignedTinyInt
+//   card0        Int    @default(0) @db.UnsignedInt
+//   card1        Int    @default(0) @db.UnsignedInt
+//   card2        Int    @default(0) @db.UnsignedInt
+//   card3        Int    @default(0) @db.UnsignedInt
+//   option_id0   Int    @default(0) @db.SmallInt
+//   option_val0  Int    @default(0) @db.SmallInt
+//   option_parm0 Int    @default(0) @db.TinyInt
+//   option_id1   Int    @default(0) @db.SmallInt
+//   option_val1  Int    @default(0) @db.SmallInt
+//   option_parm1 Int    @default(0) @db.TinyInt
+//   option_id2   Int    @default(0) @db.SmallInt
+//   option_val2  Int    @default(0) @db.SmallInt
+//   option_parm2 Int    @default(0) @db.TinyInt
+//   option_id3   Int    @default(0) @db.SmallInt
+//   option_val3  Int    @default(0) @db.SmallInt
+//   option_parm3 Int    @default(0) @db.TinyInt
+//   option_id4   Int    @default(0) @db.SmallInt
+//   option_val4  Int    @default(0) @db.SmallInt
+//   option_parm4 Int    @default(0) @db.TinyInt
+//   unique_id    BigInt @default(0) @db.UnsignedBigInt
+//   enchantgrade Int    @default(0) @db.UnsignedTinyInt
+// }
+
+// model avalon_anticheck {
+//   char_id     Int    @id @default(0) @db.UnsignedInt
+//   name        String @default("") @db.VarChar(30)
+//   numbercheck Int?
+// }
+
+// /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+// model avalon_monster {
+//   number    Int      @default(0)
+//   numbernpc Int      @default(0)
+//   date      DateTime @db.Date
+//   monster   Int      @default(0)
+
+//   @@ignore
+// }
+
+// model avalon_monster_log {
+//   num       Int      @id @default(autoincrement())
+//   char_id   Int      @default(0)
+//   name      String   @default("0") @db.VarChar(30)
+//   number    Int      @default(0)
+//   numbernpc Int?
+//   select    String   @default("0") @db.VarChar(255)
+//   zeny      Int      @default(0)
+//   date      DateTime @db.Date
+// }
+
+// model barter {
+//   name   String @default("") @db.VarChar(50)
+//   index  Int    @db.UnsignedSmallInt
+//   amount Int    @db.UnsignedSmallInt
+
+//   @@id([name, index])
+// }
+
+// model battlemob_bet {
+//   id        Int    @id @default(autoincrement())
+//   acc_id    Int
+//   char_id   Int
+//   char_name String @db.VarChar(255)
+//   bet       String @db.VarChar(255)
+// }
+
+// model battlemob_bet_log {
+//   id        Int       @id @default(autoincrement())
+//   acc_id    Int
+//   char_id   Int
+//   char_name String    @db.VarChar(255)
+//   round     Int
+//   bet       String    @db.VarChar(255)
+//   date      DateTime? @db.Date
+// }
+
+// model battlemob_reward {
+//   id        Int    @id @default(autoincrement())
+//   acc_id    Int
+//   char_id   Int
+//   char_name String @db.VarChar(255)
+// }
+
+// /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+// model bonus_script {
+//   char_id Int     @db.UnsignedInt
+//   script  String  @db.Text
+//   tick    BigInt  @default(0)
+//   flag    Int     @default(0) @db.UnsignedSmallInt
+//   type    Boolean @default(false)
+//   icon    Int     @default(-1) @db.SmallInt
+
+//   @@index([char_id], map: "char_id")
+//   @@ignore
+// }
+
+// model bot_check {
+//   id         BigInt    @id @default(autoincrement())
+//   account_id BigInt
+//   char_id    BigInt
+//   char_name  String?   @db.VarChar(255)
+//   map        String?   @db.VarChar(255)
+//   code       String?   @db.VarChar(255)
+//   date       DateTime? @db.DateTime(0)
+// }
+
+// model branchlog {
+//   branch_id   Int      @id @default(autoincrement()) @db.UnsignedMediumInt
+//   branch_date DateTime @db.DateTime(0)
+//   account_id  Int      @default(0)
+//   char_id     Int      @default(0)
+//   char_name   String   @default("") @db.VarChar(25)
+//   map         String   @default("") @db.VarChar(11)
+
+//   @@index([account_id], map: "account_id")
+//   @@index([char_id], map: "char_id")
+// }
+
+// model buyingstore_items {
+//   buyingstore_id Int @db.UnsignedInt
+//   index          Int @db.UnsignedSmallInt
+//   item_id        Int @db.UnsignedInt
+//   amount         Int @db.UnsignedSmallInt
+//   price          Int @db.UnsignedInt
+
+//   @@id([buyingstore_id, index])
+// }
+
+// model buyingstores {
+//   id             Int              @id @db.UnsignedInt
+//   account_id     Int              @db.UnsignedInt
+//   char_id        Int              @db.UnsignedInt
+//   sex            buyingstores_sex @default(M)
+//   map            String           @db.VarChar(20)
+//   x              Int              @db.UnsignedSmallInt
+//   y              Int              @db.UnsignedSmallInt
+//   title          String           @db.VarChar(80)
+//   limit          Int              @db.UnsignedInt
+//   body_direction String           @default("4") @db.Char(1)
+//   head_direction String           @default("0") @db.Char(1)
+//   sit            String           @default("1") @db.Char(1)
+//   autotrade      Int              @db.TinyInt
+// }
+
+// model cart_inventory {
+//   id           Int    @id @default(autoincrement())
+//   char_id      Int    @default(0)
+//   nameid       Int    @default(0) @db.UnsignedInt
+//   amount       Int    @default(0)
+//   equip        Int    @default(0) @db.UnsignedInt
+//   identify     Int    @default(0) @db.SmallInt
+//   refine       Int    @default(0) @db.UnsignedTinyInt
+//   attribute    Int    @default(0) @db.TinyInt
+//   card0        Int    @default(0) @db.UnsignedInt
+//   card1        Int    @default(0) @db.UnsignedInt
+//   card2        Int    @default(0) @db.UnsignedInt
+//   card3        Int    @default(0) @db.UnsignedInt
+//   option_id0   Int    @default(0) @db.SmallInt
+//   option_val0  Int    @default(0) @db.SmallInt
+//   option_parm0 Int    @default(0) @db.TinyInt
+//   option_id1   Int    @default(0) @db.SmallInt
+//   option_val1  Int    @default(0) @db.SmallInt
+//   option_parm1 Int    @default(0) @db.TinyInt
+//   option_id2   Int    @default(0) @db.SmallInt
+//   option_val2  Int    @default(0) @db.SmallInt
+//   option_parm2 Int    @default(0) @db.TinyInt
+//   option_id3   Int    @default(0) @db.SmallInt
+//   option_val3  Int    @default(0) @db.SmallInt
+//   option_parm3 Int    @default(0) @db.TinyInt
+//   option_id4   Int    @default(0) @db.SmallInt
+//   option_val4  Int    @default(0) @db.SmallInt
+//   option_parm4 Int    @default(0) @db.TinyInt
+//   expire_time  Int    @default(0) @db.UnsignedInt
+//   bound        Int    @default(0) @db.UnsignedTinyInt
+//   unique_id    BigInt @default(0) @db.UnsignedBigInt
+//   enchantgrade Int    @default(0) @db.UnsignedTinyInt
+
+//   @@index([char_id], map: "char_id")
+// }
+
+// model cashlog {
+//   id        Int               @id @default(autoincrement())
+//   time      DateTime          @db.DateTime(0)
+//   char_id   Int               @default(0)
+//   type      cashlog_type      @default(S)
+//   cash_type cashlog_cash_type @default(O)
+//   amount    Int               @default(0)
+//   map       String            @default("") @db.VarChar(11)
+
+//   @@index([type], map: "type")
+// }
+
+// model char {
+//   char_id            Int       @id @default(autoincrement()) @db.UnsignedInt
+//   account_id         Int       @default(0) @db.UnsignedInt
+//   char_num           Boolean   @default(false)
+//   name               String    @unique(map: "name_key") @default("") @db.VarChar(30)
+//   class              Int       @default(0) @db.UnsignedSmallInt
+//   base_level         Int       @default(1) @db.UnsignedSmallInt
+//   job_level          Int       @default(1) @db.UnsignedSmallInt
+//   base_exp           BigInt    @default(0) @db.UnsignedBigInt
+//   job_exp            BigInt    @default(0) @db.UnsignedBigInt
+//   zeny               Int       @default(0) @db.UnsignedInt
+//   str                Int       @default(0) @db.UnsignedSmallInt
+//   agi                Int       @default(0) @db.UnsignedSmallInt
+//   vit                Int       @default(0) @db.UnsignedSmallInt
+//   int                Int       @default(0) @db.UnsignedSmallInt
+//   dex                Int       @default(0) @db.UnsignedSmallInt
+//   luk                Int       @default(0) @db.UnsignedSmallInt
+//   pow                Int       @default(0) @db.UnsignedSmallInt
+//   sta                Int       @default(0) @db.UnsignedSmallInt
+//   wis                Int       @default(0) @db.UnsignedSmallInt
+//   spl                Int       @default(0) @db.UnsignedSmallInt
+//   con                Int       @default(0) @db.UnsignedSmallInt
+//   crt                Int       @default(0) @db.UnsignedSmallInt
+//   max_hp             Int       @default(0) @db.UnsignedInt
+//   hp                 Int       @default(0) @db.UnsignedInt
+//   max_sp             Int       @default(0) @db.UnsignedInt
+//   sp                 Int       @default(0) @db.UnsignedInt
+//   max_ap             Int       @default(0) @db.UnsignedInt
+//   ap                 Int       @default(0) @db.UnsignedInt
+//   status_point       Int       @default(0) @db.UnsignedInt
+//   skill_point        Int       @default(0) @db.UnsignedInt
+//   trait_point        Int       @default(0) @db.UnsignedInt
+//   option             Int       @default(0)
+//   karma              Int       @default(0) @db.TinyInt
+//   manner             Int       @default(0) @db.SmallInt
+//   party_id           Int       @default(0) @db.UnsignedInt
+//   guild_id           Int       @default(0) @db.UnsignedInt
+//   pet_id             Int       @default(0) @db.UnsignedInt
+//   homun_id           Int       @default(0) @db.UnsignedInt
+//   elemental_id       Int       @default(0) @db.UnsignedInt
+//   hair               Int       @default(0) @db.UnsignedTinyInt
+//   hair_color         Int       @default(0) @db.UnsignedSmallInt
+//   clothes_color      Int       @default(0) @db.UnsignedSmallInt
+//   body               Int       @default(0) @db.UnsignedSmallInt
+//   weapon             Int       @default(0) @db.UnsignedSmallInt
+//   shield             Int       @default(0) @db.UnsignedSmallInt
+//   head_top           Int       @default(0) @db.UnsignedSmallInt
+//   head_mid           Int       @default(0) @db.UnsignedSmallInt
+//   head_bottom        Int       @default(0) @db.UnsignedSmallInt
+//   robe               Int       @default(0) @db.UnsignedSmallInt
+//   last_map           String    @default("") @db.VarChar(11)
+//   last_x             Int       @default(53) @db.UnsignedSmallInt
+//   last_y             Int       @default(111) @db.UnsignedSmallInt
+//   save_map           String    @default("") @db.VarChar(11)
+//   save_x             Int       @default(53) @db.UnsignedSmallInt
+//   save_y             Int       @default(111) @db.UnsignedSmallInt
+//   partner_id         Int       @default(0) @db.UnsignedInt
+//   online             Int       @default(0) @db.TinyInt
+//   father             Int       @default(0) @db.UnsignedInt
+//   mother             Int       @default(0) @db.UnsignedInt
+//   child              Int       @default(0) @db.UnsignedInt
+//   fame               Int       @default(0) @db.UnsignedInt
+//   rename             Int       @default(0) @db.UnsignedSmallInt
+//   delete_date        Int       @default(0) @db.UnsignedInt
+//   moves              Int       @default(0) @db.UnsignedInt
+//   unban_time         Int       @default(0) @db.UnsignedInt
+//   font               Int       @default(0) @db.UnsignedTinyInt
+//   uniqueitem_counter Int       @default(0) @db.UnsignedInt
+//   sex                char_sex
+//   hotkey_rowshift    Int       @default(0) @db.UnsignedTinyInt
+//   hotkey_rowshift2   Int       @default(0) @db.UnsignedTinyInt
+//   clan_id            Int       @default(0) @db.UnsignedInt
+//   last_login         DateTime? @db.DateTime(0)
+//   title_id           Int       @default(0) @db.UnsignedInt
+//   show_equip         Int       @default(0) @db.UnsignedTinyInt
+//   inventory_slots    Int       @default(100) @db.SmallInt
+
+//   @@index([account_id], map: "account_id")
+//   @@index([guild_id], map: "guild_id")
+//   @@index([online], map: "online")
+//   @@index([party_id], map: "party_id")
+// }
+
+// model char_configs {
+//   account_id Int    @db.UnsignedInt
+//   char_id    Int    @db.UnsignedInt
+//   world_name String @db.VarChar(32)
+//   data       String @db.LongText
+
+//   @@id([account_id, char_id, world_name])
+// }
+
+// model char_reg_num {
+//   char_id Int    @default(0) @db.UnsignedInt
+//   key     String @default("") @db.VarChar(32)
+//   index   Int    @default(0) @db.UnsignedInt
+//   value   BigInt @default(0)
+
+//   @@id([char_id, key, index])
+//   @@index([char_id], map: "char_id")
+// }
+
+// model char_reg_str {
+//   char_id Int    @default(0) @db.UnsignedInt
+//   key     String @default("") @db.VarChar(32)
+//   index   Int    @default(0) @db.UnsignedInt
+//   value   String @default("0") @db.VarChar(254)
+
+//   @@id([char_id, key, index])
+//   @@index([char_id], map: "char_id")
+// }
+
+// model charlog {
+//   id         BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+//   time       DateTime @db.DateTime(0)
+//   char_msg   String   @default("char select") @db.VarChar(255)
+//   account_id Int      @default(0)
+//   char_num   Int      @default(0) @db.TinyInt
+//   name       String   @default("") @db.VarChar(23)
+//   str        Int      @default(0) @db.UnsignedInt
+//   agi        Int      @default(0) @db.UnsignedInt
+//   vit        Int      @default(0) @db.UnsignedInt
+//   int        Int      @default(0) @db.UnsignedInt
+//   dex        Int      @default(0) @db.UnsignedInt
+//   luk        Int      @default(0) @db.UnsignedInt
+//   hair       Int      @default(0) @db.TinyInt
+//   hair_color Int      @default(0)
+
+//   @@index([account_id], map: "account_id")
+// }
+
+// model chatlog {
+//   id            BigInt       @id @default(autoincrement())
+//   time          DateTime     @db.DateTime(0)
+//   type          chatlog_type @default(O)
+//   type_id       Int          @default(0)
+//   src_charid    Int          @default(0)
+//   src_accountid Int          @default(0)
+//   src_map       String       @default("") @db.VarChar(11)
+//   src_map_x     Int          @default(0) @db.SmallInt
+//   src_map_y     Int          @default(0) @db.SmallInt
+//   dst_charname  String       @default("") @db.VarChar(25)
+//   message       String       @default("") @db.VarChar(150)
+
+//   @@index([src_accountid], map: "src_accountid")
+//   @@index([src_charid], map: "src_charid")
+// }
+
+// model clan {
+//   clan_id    Int    @id @default(autoincrement()) @db.UnsignedInt
+//   name       String @default("") @db.VarChar(24)
+//   master     String @default("") @db.VarChar(24)
+//   mapname    String @default("") @db.VarChar(24)
+//   max_member Int    @default(0) @db.UnsignedSmallInt
+// }
+
+// model clan_alliance {
+//   clan_id     Int    @default(0) @db.UnsignedInt
+//   opposition  Int    @default(0) @db.UnsignedInt
+//   alliance_id Int    @default(0) @db.UnsignedInt
+//   name        String @default("") @db.VarChar(24)
+
+//   @@id([clan_id, alliance_id])
+//   @@index([alliance_id], map: "alliance_id")
+// }
+
+// model class_name {
+//   id   Int     @id @default(autoincrement())
+//   Name String? @db.VarChar(255)
+// }
+
+// model code_history {
+//   id           BigInt   @id @default(autoincrement())
+//   used_code    String?  @db.VarChar(255)
+//   account_id   BigInt?
+//   char_id      BigInt?
+//   created_date DateTime @default(now()) @db.Timestamp(0)
+// }
+
+// model code_main {
+//   id           BigInt   @id @default(autoincrement())
+//   code         String?  @db.VarChar(255)
+//   quota        Int?
+//   redeem       Int      @default(0)
+//   created_date DateTime @default(now()) @db.Timestamp(0)
+// }
+
+// model code_sub {
+//   id          BigInt  @id @default(autoincrement())
+//   code_id     BigInt?
+//   item_id     Int?
+//   item_amount Int?
+// }
+
+// model collection_storage {
+//   id           Int    @id @default(autoincrement()) @db.UnsignedInt
+//   account_id   Int    @default(0) @db.UnsignedInt
+//   nameid       Int    @default(0) @db.UnsignedInt
+//   amount       Int    @default(0) @db.UnsignedSmallInt
+//   equip        Int    @default(0) @db.UnsignedInt
+//   identify     Int    @default(0) @db.UnsignedSmallInt
+//   refine       Int    @default(0) @db.UnsignedTinyInt
+//   attribute    Int    @default(0) @db.UnsignedTinyInt
+//   card0        Int    @default(0) @db.UnsignedInt
+//   card1        Int    @default(0) @db.UnsignedInt
+//   card2        Int    @default(0) @db.UnsignedInt
+//   card3        Int    @default(0) @db.UnsignedInt
+//   option_id0   Int    @default(0) @db.SmallInt
+//   option_val0  Int    @default(0) @db.SmallInt
+//   option_parm0 Int    @default(0) @db.TinyInt
+//   option_id1   Int    @default(0) @db.SmallInt
+//   option_val1  Int    @default(0) @db.SmallInt
+//   option_parm1 Int    @default(0) @db.TinyInt
+//   option_id2   Int    @default(0) @db.SmallInt
+//   option_val2  Int    @default(0) @db.SmallInt
+//   option_parm2 Int    @default(0) @db.TinyInt
+//   option_id3   Int    @default(0) @db.SmallInt
+//   option_val3  Int    @default(0) @db.SmallInt
+//   option_parm3 Int    @default(0) @db.TinyInt
+//   option_id4   Int    @default(0) @db.SmallInt
+//   option_val4  Int    @default(0) @db.SmallInt
+//   option_parm4 Int    @default(0) @db.TinyInt
+//   expire_time  Int    @default(0) @db.UnsignedInt
+//   bound        Int    @default(0) @db.UnsignedTinyInt
+//   unique_id    BigInt @default(0) @db.UnsignedBigInt
+//   enchantgrade Int    @default(0) @db.UnsignedTinyInt
+
+//   @@index([account_id], map: "account_id")
+// }
+
+// /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+// model costume_collection {
+//   aid        Int
+//   costume_id Int
+//   type       String @default("") @db.VarChar(50)
+
+//   @@ignore
+// }
+
+// /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+// model cp_price {
+//   current_price Int?
+
+//   @@ignore
+// }
+
+// model db_roulette {
+//   index   Int @id @default(0)
+//   level   Int @db.UnsignedSmallInt
+//   item_id Int @db.UnsignedInt
+//   amount  Int @default(1) @db.UnsignedSmallInt
+//   flag    Int @default(1) @db.UnsignedSmallInt
+// }
+
+
+
+// model duckdig {
+//   id          BigInt  @id @default(autoincrement())
+//   account_id  Int     @unique(map: "account_id")
+//   point       Int
+//   total_point Int
+//   status      Boolean @default(false)
+// }
+
+// model elemental {
+//   ele_id    Int    @id @default(autoincrement()) @db.UnsignedInt
+//   char_id   Int
+//   class     Int    @default(0) @db.UnsignedMediumInt
+//   mode      Int    @default(1) @db.UnsignedInt
+//   hp        Int    @default(0) @db.UnsignedInt
+//   sp        Int    @default(0) @db.UnsignedInt
+//   max_hp    Int    @default(0) @db.UnsignedInt
+//   max_sp    Int    @default(0) @db.UnsignedInt
+//   atk1      Int    @default(0) @db.UnsignedMediumInt
+//   atk2      Int    @default(0) @db.UnsignedMediumInt
+//   matk      Int    @default(0) @db.UnsignedMediumInt
+//   aspd      Int    @default(0) @db.UnsignedSmallInt
+//   def       Int    @default(0) @db.UnsignedSmallInt
+//   mdef      Int    @default(0) @db.UnsignedSmallInt
+//   flee      Int    @default(0) @db.UnsignedSmallInt
+//   hit       Int    @default(0) @db.UnsignedSmallInt
+//   life_time BigInt @default(0)
+// }
+
+// model feedinglog {
+//   id           Int             @id @default(autoincrement())
+//   time         DateTime        @db.DateTime(0)
+//   char_id      Int
+//   target_id    Int
+//   target_class Int             @db.SmallInt
+//   type         feedinglog_type
+//   intimacy     Int             @db.UnsignedInt
+//   item_id      Int             @db.UnsignedInt
+//   map          String          @db.VarChar(11)
+//   x            Int             @db.UnsignedSmallInt
+//   y            Int             @db.UnsignedSmallInt
+// }
+
+// model friends {
+//   char_id   Int @default(0)
+//   friend_id Int @default(0)
+
+//   @@id([char_id, friend_id])
+// }
+
+// model gachapon {
+//   id         BigInt  @id @default(autoincrement())
+//   account_id BigInt?
+//   char_id    BigInt?
+//   char_name  String? @db.VarChar(255)
+//   type       String? @db.VarChar(255)
+//   jackpot    Int?
+// }
+
+// model gachapon_jackpot {
+//   id            BigInt  @id @default(autoincrement())
+//   account_id    BigInt?
+//   char_id       BigInt?
+//   char_name     String? @db.VarChar(255)
+//   type          String? @db.VarChar(255)
+//   jackpot_count Int?
+// }
+
+// model gepard_block {
+//   unique_id  Int      @unique(map: "unique_id") @default(0) @db.UnsignedInt
+//   unban_time DateTime @db.DateTime(0)
+//   reason     String   @db.VarChar(50)
+// }
+
+// model gepard_block_log {
+//   id                   Int      @id @default(autoincrement()) @db.UnsignedInt
+//   unique_id            Int      @default(0) @db.UnsignedInt
+//   block_time           DateTime @db.DateTime(0)
+//   unban_time           DateTime @db.DateTime(0)
+//   violator_name        String   @db.VarChar(24)
+//   violator_account_id  Int
+//   initiator_name       String   @db.VarChar(24)
+//   initiator_account_id Int
+//   reason               String   @db.VarChar(50)
+// }
+
+// /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+// model gepard_min_allowed_license_version {
+//   version Int @default(2018033001) @db.UnsignedInt
+
+//   @@ignore
+// }
+
+// /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+// model gepard_report_log {
+//   time       DateTime @db.DateTime(0)
+//   unique_id  Int      @default(0) @db.UnsignedInt
+//   account_id Int      @default(0) @db.UnsignedInt
+//   char_id    Int      @default(0) @db.UnsignedInt
+//   char_name  String   @db.VarChar(24)
+//   report_str String   @db.VarChar(120)
+
+//   @@ignore
+// }
+
+// model global_acc_reg_num {
+//   account_id Int    @default(0) @db.UnsignedInt
+//   key        String @default("") @db.VarChar(32)
+//   index      Int    @default(0) @db.UnsignedInt
+//   value      BigInt @default(0)
+
+//   @@id([account_id, key, index])
+//   @@index([account_id], map: "account_id")
+// }
+
+// model global_acc_reg_str {
+//   account_id Int    @default(0) @db.UnsignedInt
+//   key        String @default("") @db.VarChar(32)
+//   index      Int    @default(0) @db.UnsignedInt
+//   value      String @default("0") @db.VarChar(254)
+
+//   @@id([account_id, key, index])
+//   @@index([account_id], map: "account_id")
+// }
+
+// model guild {
+//   guild_id           Int       @unique(map: "guild_id") @default(autoincrement()) @db.UnsignedInt
+//   name               String    @default("") @db.VarChar(24)
+//   char_id            Int       @default(0) @db.UnsignedInt
+//   master             String    @default("") @db.VarChar(24)
+//   guild_lv           Int       @default(0) @db.UnsignedTinyInt
+//   connect_member     Int       @default(0) @db.UnsignedTinyInt
+//   max_member         Int       @default(0) @db.UnsignedTinyInt
+//   average_lv         Int       @default(1) @db.UnsignedSmallInt
+//   exp                BigInt    @default(0) @db.UnsignedBigInt
+//   next_exp           BigInt    @default(0) @db.UnsignedBigInt
+//   skill_point        Int       @default(0) @db.UnsignedTinyInt
+//   mes1               String    @default("") @db.VarChar(60)
+//   mes2               String    @default("") @db.VarChar(120)
+//   emblem_len         Int       @default(0) @db.UnsignedInt
+//   emblem_id          Int       @default(0) @db.UnsignedInt
+//   emblem_data        Bytes?    @db.Blob
+//   last_master_change DateTime? @db.DateTime(0)
+
+//   @@id([guild_id, char_id])
+//   @@index([char_id], map: "char_id")
+// }
+
+// model guild_alliance {
+//   guild_id    Int    @default(0) @db.UnsignedInt
+//   opposition  Int    @default(0) @db.UnsignedInt
+//   alliance_id Int    @default(0) @db.UnsignedInt
+//   name        String @default("") @db.VarChar(24)
+
+//   @@id([guild_id, alliance_id])
+//   @@index([alliance_id], map: "alliance_id")
+// }
+
+// model guild_castle {
+//   castle_id  Int @id @default(0) @db.UnsignedInt
+//   guild_id   Int @default(0) @db.UnsignedInt
+//   economy    Int @default(0) @db.UnsignedInt
+//   defense    Int @default(0) @db.UnsignedInt
+//   triggerE   Int @default(0) @db.UnsignedInt
+//   triggerD   Int @default(0) @db.UnsignedInt
+//   nextTime   Int @default(0) @db.UnsignedInt
+//   payTime    Int @default(0) @db.UnsignedInt
+//   createTime Int @default(0) @db.UnsignedInt
+//   visibleC   Int @default(0) @db.UnsignedInt
+//   visibleG0  Int @default(0) @db.UnsignedInt
+//   visibleG1  Int @default(0) @db.UnsignedInt
+//   visibleG2  Int @default(0) @db.UnsignedInt
+//   visibleG3  Int @default(0) @db.UnsignedInt
+//   visibleG4  Int @default(0) @db.UnsignedInt
+//   visibleG5  Int @default(0) @db.UnsignedInt
+//   visibleG6  Int @default(0) @db.UnsignedInt
+//   visibleG7  Int @default(0) @db.UnsignedInt
+
+//   @@index([guild_id], map: "guild_id")
+// }
+
+// model guild_emblems {
+//   guild_id   Int    @db.UnsignedInt
+//   world_name String @db.VarChar(32)
+//   file_type  String @db.VarChar(255)
+//   file_data  Bytes? @db.Blob
+//   version    Int    @default(0) @db.UnsignedInt
+
+//   @@id([guild_id, world_name])
+// }
+
+// model guild_expulsion {
+//   guild_id   Int    @default(0) @db.UnsignedInt
+//   account_id Int    @default(0) @db.UnsignedInt
+//   name       String @default("") @db.VarChar(24)
+//   mes        String @default("") @db.VarChar(40)
+
+//   @@id([guild_id, name])
+// }
+
+// model guild_member {
+//   guild_id Int    @default(0) @db.UnsignedInt
+//   char_id  Int    @default(0) @db.UnsignedInt
+//   exp      BigInt @default(0) @db.UnsignedBigInt
+//   position Int    @default(0) @db.UnsignedTinyInt
+
+//   @@id([guild_id, char_id])
+//   @@index([char_id], map: "char_id")
+// }
+
+// model guild_position {
+//   guild_id Int    @default(0) @db.UnsignedInt
+//   position Int    @default(0) @db.UnsignedTinyInt
+//   name     String @default("") @db.VarChar(24)
+//   mode     Int    @default(0) @db.UnsignedSmallInt
+//   exp_mode Int    @default(0) @db.UnsignedTinyInt
+
+//   @@id([guild_id, position])
+// }
+
+// model guild_skill {
+//   guild_id Int @default(0) @db.UnsignedInt
+//   id       Int @default(0) @db.UnsignedSmallInt
+//   lv       Int @default(0) @db.UnsignedTinyInt
+
+//   @@id([guild_id, id])
+// }
+
+// model guild_storage {
+//   id           Int    @id @default(autoincrement()) @db.UnsignedInt
+//   guild_id     Int    @default(0) @db.UnsignedInt
+//   nameid       Int    @default(0) @db.UnsignedInt
+//   amount       Int    @default(0) @db.UnsignedInt
+//   equip        Int    @default(0) @db.UnsignedInt
+//   identify     Int    @default(0) @db.UnsignedSmallInt
+//   refine       Int    @default(0) @db.UnsignedTinyInt
+//   attribute    Int    @default(0) @db.UnsignedTinyInt
+//   card0        Int    @default(0) @db.UnsignedInt
+//   card1        Int    @default(0) @db.UnsignedInt
+//   card2        Int    @default(0) @db.UnsignedInt
+//   card3        Int    @default(0) @db.UnsignedInt
+//   option_id0   Int    @default(0) @db.SmallInt
+//   option_val0  Int    @default(0) @db.SmallInt
+//   option_parm0 Int    @default(0) @db.TinyInt
+//   option_id1   Int    @default(0) @db.SmallInt
+//   option_val1  Int    @default(0) @db.SmallInt
+//   option_parm1 Int    @default(0) @db.TinyInt
+//   option_id2   Int    @default(0) @db.SmallInt
+//   option_val2  Int    @default(0) @db.SmallInt
+//   option_parm2 Int    @default(0) @db.TinyInt
+//   option_id3   Int    @default(0) @db.SmallInt
+//   option_val3  Int    @default(0) @db.SmallInt
+//   option_parm3 Int    @default(0) @db.TinyInt
+//   option_id4   Int    @default(0) @db.SmallInt
+//   option_val4  Int    @default(0) @db.SmallInt
+//   option_parm4 Int    @default(0) @db.TinyInt
+//   expire_time  Int    @default(0) @db.UnsignedInt
+//   bound        Int    @default(0) @db.UnsignedTinyInt
+//   unique_id    BigInt @default(0) @db.UnsignedBigInt
+//   enchantgrade Int    @default(0) @db.UnsignedTinyInt
+
+//   @@index([guild_id], map: "guild_id")
+// }
+
+// model guild_storage_log {
+//   id           Int      @id @default(autoincrement())
+//   guild_id     Int      @default(0) @db.UnsignedInt
+//   time         DateTime @db.DateTime(0)
+//   char_id      Int      @default(0)
+//   name         String   @default("") @db.VarChar(24)
+//   nameid       Int      @default(0) @db.UnsignedInt
+//   amount       Int      @default(1)
+//   identify     Int      @default(0) @db.SmallInt
+//   refine       Int      @default(0) @db.UnsignedTinyInt
+//   attribute    Int      @default(0) @db.UnsignedTinyInt
+//   card0        Int      @default(0) @db.UnsignedInt
+//   card1        Int      @default(0) @db.UnsignedInt
+//   card2        Int      @default(0) @db.UnsignedInt
+//   card3        Int      @default(0) @db.UnsignedInt
+//   option_id0   Int      @default(0) @db.SmallInt
+//   option_val0  Int      @default(0) @db.SmallInt
+//   option_parm0 Int      @default(0) @db.TinyInt
+//   option_id1   Int      @default(0) @db.SmallInt
+//   option_val1  Int      @default(0) @db.SmallInt
+//   option_parm1 Int      @default(0) @db.TinyInt
+//   option_id2   Int      @default(0) @db.SmallInt
+//   option_val2  Int      @default(0) @db.SmallInt
+//   option_parm2 Int      @default(0) @db.TinyInt
+//   option_id3   Int      @default(0) @db.SmallInt
+//   option_val3  Int      @default(0) @db.SmallInt
+//   option_parm3 Int      @default(0) @db.TinyInt
+//   option_id4   Int      @default(0) @db.SmallInt
+//   option_val4  Int      @default(0) @db.SmallInt
+//   option_parm4 Int      @default(0) @db.TinyInt
+//   expire_time  Int      @default(0) @db.UnsignedInt
+//   unique_id    BigInt   @default(0) @db.UnsignedBigInt
+//   bound        Boolean  @default(false)
+//   enchantgrade Int      @default(0) @db.UnsignedTinyInt
+
+//   @@index([guild_id], map: "guild_id")
+// }
+
+// model homunculus {
+//   homun_id    Int    @id @default(autoincrement())
+//   char_id     Int
+//   class       Int    @default(0) @db.UnsignedMediumInt
+//   prev_class  Int    @default(0) @db.MediumInt
+//   name        String @default("") @db.VarChar(24)
+//   level       Int    @default(0) @db.SmallInt
+//   exp         BigInt @default(0) @db.UnsignedBigInt
+//   intimacy    Int    @default(0)
+//   hunger      Int    @default(0) @db.SmallInt
+//   str         Int    @default(0) @db.UnsignedSmallInt
+//   agi         Int    @default(0) @db.UnsignedSmallInt
+//   vit         Int    @default(0) @db.UnsignedSmallInt
+//   int         Int    @default(0) @db.UnsignedSmallInt
+//   dex         Int    @default(0) @db.UnsignedSmallInt
+//   luk         Int    @default(0) @db.UnsignedSmallInt
+//   hp          Int    @default(0) @db.UnsignedInt
+//   max_hp      Int    @default(0) @db.UnsignedInt
+//   sp          Int    @default(0)
+//   max_sp      Int    @default(0)
+//   skill_point Int    @default(0) @db.UnsignedSmallInt
+//   alive       Int    @default(1) @db.TinyInt
+//   rename_flag Int    @default(0) @db.TinyInt
+//   vaporize    Int    @default(0) @db.TinyInt
+//   autofeed    Int    @default(0) @db.TinyInt
+// }
+
+// model hotkey {
+//   char_id      Int
+//   hotkey       Int     @db.UnsignedTinyInt
+//   type         Boolean @default(false)
+//   itemskill_id Int     @default(0) @db.UnsignedInt
+//   skill_lvl    Int     @default(0) @db.UnsignedTinyInt
+
+//   @@id([char_id, hotkey])
+// }
+
+// model interlog {
+//   id   Int      @id @default(autoincrement())
+//   time DateTime @db.DateTime(0)
+//   log  String   @default("") @db.VarChar(255)
+
+//   @@index([time], map: "time")
+// }
+
+// model inventory {
+//   id           Int    @id @default(autoincrement()) @db.UnsignedInt
+//   char_id      Int    @default(0) @db.UnsignedInt
+//   nameid       Int    @default(0) @db.UnsignedInt
+//   amount       Int    @default(0) @db.UnsignedInt
+//   equip        Int    @default(0) @db.UnsignedInt
+//   identify     Int    @default(0) @db.SmallInt
+//   refine       Int    @default(0) @db.UnsignedTinyInt
+//   attribute    Int    @default(0) @db.UnsignedTinyInt
+//   card0        Int    @default(0) @db.UnsignedInt
+//   card1        Int    @default(0) @db.UnsignedInt
+//   card2        Int    @default(0) @db.UnsignedInt
+//   card3        Int    @default(0) @db.UnsignedInt
+//   option_id0   Int    @default(0) @db.SmallInt
+//   option_val0  Int    @default(0) @db.SmallInt
+//   option_parm0 Int    @default(0) @db.TinyInt
+//   option_id1   Int    @default(0) @db.SmallInt
+//   option_val1  Int    @default(0) @db.SmallInt
+//   option_parm1 Int    @default(0) @db.TinyInt
+//   option_id2   Int    @default(0) @db.SmallInt
+//   option_val2  Int    @default(0) @db.SmallInt
+//   option_parm2 Int    @default(0) @db.TinyInt
+//   option_id3   Int    @default(0) @db.SmallInt
+//   option_val3  Int    @default(0) @db.SmallInt
+//   option_parm3 Int    @default(0) @db.TinyInt
+//   option_id4   Int    @default(0) @db.SmallInt
+//   option_val4  Int    @default(0) @db.SmallInt
+//   option_parm4 Int    @default(0) @db.TinyInt
+//   expire_time  Int    @default(0) @db.UnsignedInt
+//   favorite     Int    @default(0) @db.UnsignedTinyInt
+//   bound        Int    @default(0) @db.UnsignedTinyInt
+//   unique_id    BigInt @default(0) @db.UnsignedBigInt
+//   equip_switch Int    @default(0) @db.UnsignedInt
+//   enchantgrade Int    @default(0) @db.UnsignedTinyInt
+
+//   @@index([char_id], map: "char_id")
+// }
+
+// model ipbanlist {
+//   list   String   @default("") @db.VarChar(15)
+//   btime  DateTime @db.DateTime(0)
+//   rtime  DateTime @db.DateTime(0)
+//   reason String   @default("") @db.VarChar(255)
+
+//   @@id([list, btime])
+// }
+
+// /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+// model loginlog {
+//   time      DateTime @db.DateTime(0)
+//   ip        String   @default("") @db.VarChar(15)
+//   user      String   @default("") @db.VarChar(23)
+//   rcode     Int      @default(0) @db.TinyInt
+//   log       String   @default("") @db.VarChar(255)
+//   unique_id Int      @default(0) @db.UnsignedInt
+
+//   @@index([ip], map: "ip")
+//   @@ignore
+// }
+
+// model lv_challenge {
+//   id         Int      @id @default(autoincrement())
+//   account_id Int
+//   name       String   @db.VarChar(255)
+//   class      String   @db.VarChar(255)
+//   base_level Int      @db.SmallInt
+//   created_at DateTime @default(now()) @db.Timestamp(0)
+// }
+
+// model lv_receive {
+//   id         Int      @id @default(autoincrement())
+//   account_id Int
+//   char_name  String?  @db.VarChar(30)
+//   class      String   @db.VarChar(6)
+//   base_level String   @db.VarChar(6)
+//   created_at DateTime @default(now()) @db.Timestamp(0)
+// }
+
+// model mail {
+//   id        BigInt @id @default(autoincrement()) @db.UnsignedBigInt
+//   send_name String @default("") @db.VarChar(30)
+//   send_id   Int    @default(0) @db.UnsignedInt
+//   dest_name String @default("") @db.VarChar(30)
+//   dest_id   Int    @default(0) @db.UnsignedInt
+//   title     String @default("") @db.VarChar(45)
+//   message   String @default("") @db.VarChar(500)
+//   time      Int    @default(0) @db.UnsignedInt
+//   status    Int    @default(0) @db.TinyInt
+//   zeny      Int    @default(0) @db.UnsignedInt
+//   type      Int    @default(0) @db.SmallInt
+// }
+
+// model mail_attachments {
+//   id           BigInt  @default(autoincrement()) @db.UnsignedBigInt
+//   index        Int     @default(0) @db.UnsignedSmallInt
+//   nameid       Int     @default(0) @db.UnsignedInt
+//   amount       Int     @default(0) @db.UnsignedInt
+//   refine       Int     @default(0) @db.UnsignedTinyInt
+//   attribute    Int     @default(0) @db.UnsignedTinyInt
+//   identify     Int     @default(0) @db.SmallInt
+//   card0        Int     @default(0) @db.UnsignedInt
+//   card1        Int     @default(0) @db.UnsignedInt
+//   card2        Int     @default(0) @db.UnsignedInt
+//   card3        Int     @default(0) @db.UnsignedInt
+//   option_id0   Int     @default(0) @db.SmallInt
+//   option_val0  Int     @default(0) @db.SmallInt
+//   option_parm0 Int     @default(0) @db.TinyInt
+//   option_id1   Int     @default(0) @db.SmallInt
+//   option_val1  Int     @default(0) @db.SmallInt
+//   option_parm1 Int     @default(0) @db.TinyInt
+//   option_id2   Int     @default(0) @db.SmallInt
+//   option_val2  Int     @default(0) @db.SmallInt
+//   option_parm2 Int     @default(0) @db.TinyInt
+//   option_id3   Int     @default(0) @db.SmallInt
+//   option_val3  Int     @default(0) @db.SmallInt
+//   option_parm3 Int     @default(0) @db.TinyInt
+//   option_id4   Int     @default(0) @db.SmallInt
+//   option_val4  Int     @default(0) @db.SmallInt
+//   option_parm4 Int     @default(0) @db.TinyInt
+//   unique_id    BigInt  @default(0) @db.UnsignedBigInt
+//   bound        Boolean @default(false)
+//   enchantgrade Int     @default(0) @db.UnsignedTinyInt
+
+//   @@id([id, index])
+// }
+
+// model mapreg {
+//   varname String @db.VarChar(32)
+//   index   Int    @default(0) @db.UnsignedInt
+//   value   String @db.VarChar(255)
+
+//   @@id([varname, index])
+// }
+
+// model market {
+//   name   String @default("") @db.VarChar(50)
+//   nameid Int    @db.UnsignedInt
+//   price  Int    @db.UnsignedInt
+//   amount Int
+//   flag   Int    @default(0) @db.UnsignedTinyInt
+
+//   @@id([name, nameid])
+// }
+
+// model memo {
+//   memo_id Int    @id @default(autoincrement()) @db.UnsignedInt
+//   char_id Int    @default(0) @db.UnsignedInt
+//   map     String @default("") @db.VarChar(11)
+//   x       Int    @default(0) @db.UnsignedSmallInt
+//   y       Int    @default(0) @db.UnsignedSmallInt
+
+//   @@index([char_id], map: "char_id")
+// }
+
+// model mercenary {
+//   mer_id       Int    @id @default(autoincrement()) @db.UnsignedInt
+//   char_id      Int
+//   class        Int    @default(0) @db.UnsignedMediumInt
+//   hp           Int    @default(0) @db.UnsignedInt
+//   sp           Int    @default(0) @db.UnsignedInt
+//   kill_counter Int
+//   life_time    BigInt @default(0)
+// }
+
+// model mercenary_owner {
+//   char_id     Int @id
+//   merc_id     Int @default(0)
+//   arch_calls  Int @default(0)
+//   arch_faith  Int @default(0)
+//   spear_calls Int @default(0)
+//   spear_faith Int @default(0)
+//   sword_calls Int @default(0)
+//   sword_faith Int @default(0)
+// }
+
+// model merchant_configs {
+//   account_id Int    @db.UnsignedInt
+//   char_id    Int    @db.UnsignedInt
+//   world_name String @db.VarChar(32)
+//   store_type Int    @default(0) @db.UnsignedTinyInt
+//   data       String @db.LongText
+
+//   @@id([account_id, char_id, world_name])
+// }
+
+// model mvplog {
+//   mvp_id       Int      @id @default(autoincrement()) @db.UnsignedMediumInt
+//   mvp_date     DateTime @db.DateTime(0)
+//   kill_char_id Int      @default(0)
+//   monster_id   Int      @default(0) @db.SmallInt
+//   prize        Int      @default(0) @db.UnsignedInt
+//   mvpexp       BigInt   @default(0) @db.UnsignedBigInt
+//   map          String   @default("") @db.VarChar(11)
+// }
+
+// model npclog {
+//   npc_id     Int      @id @default(autoincrement()) @db.UnsignedMediumInt
+//   npc_date   DateTime @db.DateTime(0)
+//   account_id Int      @default(0) @db.UnsignedInt
+//   char_id    Int      @default(0) @db.UnsignedInt
+//   char_name  String   @default("") @db.VarChar(25)
+//   map        String   @default("") @db.VarChar(11)
+//   mes        String   @default("") @db.VarChar(255)
+
+//   @@index([account_id], map: "account_id")
+//   @@index([char_id], map: "char_id")
+// }
+
+// model party {
+//   party_id    Int    @id @default(autoincrement()) @db.UnsignedInt
+//   name        String @default("") @db.VarChar(24)
+//   exp         Int    @default(0) @db.UnsignedTinyInt
+//   item        Int    @default(0) @db.UnsignedTinyInt
+//   leader_id   Int    @default(0) @db.UnsignedInt
+//   leader_char Int    @default(0) @db.UnsignedInt
+// }
+
+// model peco_bet {
+//   id        Int    @id @default(autoincrement())
+//   acc_id    Int
+//   char_id   Int
+//   char_name String @db.VarChar(255)
+//   bet       String @db.VarChar(255)
+// }
+
+// model peco_bet_log {
+//   id        Int       @id @default(autoincrement())
+//   acc_id    Int
+//   char_id   Int
+//   char_name String    @db.VarChar(255)
+//   round     Int
+//   bet       String    @db.VarChar(255)
+//   date      DateTime? @db.Date
+// }
+
+// model peco_reward {
+//   id        Int    @id @default(autoincrement())
+//   acc_id    Int
+//   char_id   Int
+//   char_name String @db.VarChar(255)
+// }
+
+// model pet {
+//   pet_id      Int    @id @default(autoincrement()) @db.UnsignedInt
+//   class       Int    @default(0) @db.UnsignedMediumInt
+//   name        String @default("") @db.VarChar(24)
+//   account_id  Int    @default(0) @db.UnsignedInt
+//   char_id     Int    @default(0) @db.UnsignedInt
+//   level       Int    @default(0) @db.UnsignedSmallInt
+//   egg_id      Int    @default(0) @db.UnsignedInt
+//   equip       Int    @default(0) @db.UnsignedInt
+//   intimate    Int    @default(0) @db.UnsignedSmallInt
+//   hungry      Int    @default(0) @db.UnsignedSmallInt
+//   rename_flag Int    @default(0) @db.UnsignedTinyInt
+//   incubate    Int    @default(0) @db.UnsignedInt
+//   autofeed    Int    @default(0) @db.TinyInt
+// }
+
+// model picklog {
+//   id           Int          @id @default(autoincrement())
+//   time         DateTime     @db.DateTime(0)
+//   char_id      Int          @default(0)
+//   type         picklog_type @default(P)
+//   nameid       Int          @default(0) @db.UnsignedInt
+//   amount       Int          @default(1)
+//   refine       Int          @default(0) @db.UnsignedTinyInt
+//   card0        Int          @default(0) @db.UnsignedInt
+//   card1        Int          @default(0) @db.UnsignedInt
+//   card2        Int          @default(0) @db.UnsignedInt
+//   card3        Int          @default(0) @db.UnsignedInt
+//   option_id0   Int          @default(0) @db.SmallInt
+//   option_val0  Int          @default(0) @db.SmallInt
+//   option_parm0 Int          @default(0) @db.TinyInt
+//   option_id1   Int          @default(0) @db.SmallInt
+//   option_val1  Int          @default(0) @db.SmallInt
+//   option_parm1 Int          @default(0) @db.TinyInt
+//   option_id2   Int          @default(0) @db.SmallInt
+//   option_val2  Int          @default(0) @db.SmallInt
+//   option_parm2 Int          @default(0) @db.TinyInt
+//   option_id3   Int          @default(0) @db.SmallInt
+//   option_val3  Int          @default(0) @db.SmallInt
+//   option_parm3 Int          @default(0) @db.TinyInt
+//   option_id4   Int          @default(0) @db.SmallInt
+//   option_val4  Int          @default(0) @db.SmallInt
+//   option_parm4 Int          @default(0) @db.TinyInt
+//   unique_id    BigInt       @default(0) @db.UnsignedBigInt
+//   map          String       @default("") @db.VarChar(11)
+//   bound        Boolean      @default(false)
+//   enchantgrade Int          @default(0) @db.UnsignedTinyInt
+
+//   @@index([type], map: "type")
+// }
+
+// model quest {
+//   char_id  Int    @default(0) @db.UnsignedInt
+//   quest_id Int    @db.UnsignedInt
+//   state    String @default("0")
+//   time     Int    @default(0) @db.UnsignedInt
+//   count1   Int    @default(0) @db.UnsignedMediumInt
+//   count2   Int    @default(0) @db.UnsignedMediumInt
+//   count3   Int    @default(0) @db.UnsignedMediumInt
+
+//   @@id([char_id, quest_id])
+// }
+
+// model refine_ranking {
+//   char_id Int    @id @default(0)
+//   name    String @default("NULL") @db.VarChar(24)
+//   point   Int    @default(0) @db.MediumInt
+// }
+
+// model reward_casino_1M {
+//   id     Int @id @default(autoincrement())
+//   aid    Int @default(0)
+//   cid    Int @default(0)
+//   item   Int @default(0)
+//   amount Int @default(0)
+//   zeny   Int @default(0)
+// }
+
+// model reward_casino_300K {
+//   id     Int @id @default(autoincrement())
+//   aid    Int @default(0)
+//   cid    Int @default(0)
+//   item   Int @default(0)
+//   amount Int @default(0)
+//   zeny   Int @default(0)
+// }
+
+// model reward_casino_300K_log {
+//   id    Int    @id @default(autoincrement())
+//   spore String @default("0") @db.VarChar(20)
+// }
+
+// model reward_casino_500K {
+//   id     Int @id @default(autoincrement())
+//   aid    Int @default(0)
+//   cid    Int @default(0)
+//   item   Int @default(0)
+//   amount Int @default(0)
+//   zeny   Int @default(0)
+// }
+
+// model reward_npc {
+//   id         Int       @id @default(autoincrement()) @db.UnsignedInt
+//   userid     String    @db.VarChar(23)
+//   account_id Int       @db.UnsignedInt
+//   item_id    Int       @db.UnsignedInt
+//   rew_amount Int       @db.UnsignedInt
+//   rew_status Boolean
+//   received   DateTime? @db.DateTime(0)
+// }
+
+// model sales {
+//   nameid Int      @id @db.UnsignedInt
+//   start  DateTime @db.DateTime(0)
+//   end    DateTime @db.DateTime(0)
+//   amount Int
+// }
+
+// model sc_data {
+//   account_id Int    @db.UnsignedInt
+//   char_id    Int    @db.UnsignedInt
+//   type       Int    @db.UnsignedSmallInt
+//   tick       BigInt
+//   val1       Int    @default(0)
+//   val2       Int    @default(0)
+//   val3       Int    @default(0)
+//   val4       Int    @default(0)
+
+//   @@id([char_id, type])
+// }
+
+// model skill {
+//   char_id Int     @default(0) @db.UnsignedInt
+//   id      Int     @default(0) @db.UnsignedSmallInt
+//   lv      Int     @default(0) @db.UnsignedTinyInt
+//   flag    Boolean @default(false)
+
+//   @@id([char_id, id])
+// }
+
+// model skill_homunculus {
+//   homun_id Int
+//   id       Int
+//   lv       Int @db.SmallInt
+
+//   @@id([homun_id, id])
+// }
+
+// model skillcooldown {
+//   account_id Int    @db.UnsignedInt
+//   char_id    Int    @db.UnsignedInt
+//   skill      Int    @default(0) @db.UnsignedSmallInt
+//   tick       BigInt
+
+//   @@id([char_id, skill])
+// }
+
+// /// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+// model spore_bet {
+//   npc_name String @db.VarChar(100)
+//   acc_id   Int
+//   char_id  Int
+//   bet      String @db.VarChar(100)
+//   amount   Int
+
+//   @@ignore
+// }
+
+// model storage {
+//   id           Int    @id @default(autoincrement()) @db.UnsignedInt
+//   account_id   Int    @default(0) @db.UnsignedInt
+//   nameid       Int    @default(0) @db.UnsignedInt
+//   amount       Int    @default(0) @db.UnsignedSmallInt
+//   equip        Int    @default(0) @db.UnsignedInt
+//   identify     Int    @default(0) @db.UnsignedSmallInt
+//   refine       Int    @default(0) @db.UnsignedTinyInt
+//   attribute    Int    @default(0) @db.UnsignedTinyInt
+//   card0        Int    @default(0) @db.UnsignedInt
+//   card1        Int    @default(0) @db.UnsignedInt
+//   card2        Int    @default(0) @db.UnsignedInt
+//   card3        Int    @default(0) @db.UnsignedInt
+//   option_id0   Int    @default(0) @db.SmallInt
+//   option_val0  Int    @default(0) @db.SmallInt
+//   option_parm0 Int    @default(0) @db.TinyInt
+//   option_id1   Int    @default(0) @db.SmallInt
+//   option_val1  Int    @default(0) @db.SmallInt
+//   option_parm1 Int    @default(0) @db.TinyInt
+//   option_id2   Int    @default(0) @db.SmallInt
+//   option_val2  Int    @default(0) @db.SmallInt
+//   option_parm2 Int    @default(0) @db.TinyInt
+//   option_id3   Int    @default(0) @db.SmallInt
+//   option_val3  Int    @default(0) @db.SmallInt
+//   option_parm3 Int    @default(0) @db.TinyInt
+//   option_id4   Int    @default(0) @db.SmallInt
+//   option_val4  Int    @default(0) @db.SmallInt
+//   option_parm4 Int    @default(0) @db.TinyInt
+//   expire_time  Int    @default(0) @db.UnsignedInt
+//   bound        Int    @default(0) @db.UnsignedTinyInt
+//   unique_id    BigInt @default(0) @db.UnsignedBigInt
+//   enchantgrade Int    @default(0) @db.UnsignedTinyInt
+
+//   @@index([account_id], map: "account_id")
+// }
+
+// model user_configs {
+//   account_id Int    @db.UnsignedInt
+//   world_name String @db.VarChar(32)
+//   data       String @db.LongText
+
+//   @@id([account_id, world_name])
+// }
+
+// model vending_items {
+//   vending_id       Int @db.UnsignedInt
+//   index            Int @db.UnsignedSmallInt
+//   cartinventory_id Int @db.UnsignedInt
+//   amount           Int @db.UnsignedSmallInt
+//   price            Int @db.UnsignedInt
+
+//   @@id([vending_id, index])
+// }
+
+// model vendings {
+//   id             Int          @id @db.UnsignedInt
+//   account_id     Int          @db.UnsignedInt
+//   char_id        Int          @db.UnsignedInt
+//   sex            vendings_sex @default(M)
+//   map            String       @db.VarChar(20)
+//   x              Int          @db.UnsignedSmallInt
+//   y              Int          @db.UnsignedSmallInt
+//   title          String       @db.VarChar(80)
+//   body_direction String       @default("4") @db.Char(1)
+//   head_direction String       @default("0") @db.Char(1)
+//   sit            String       @default("1") @db.Char(1)
+//   autotrade      Int          @db.TinyInt
+// }
+
+// model zenylog {
+//   id      Int          @id @default(autoincrement())
+//   time    DateTime     @db.DateTime(0)
+//   char_id Int          @default(0)
+//   src_id  Int          @default(0)
+//   type    zenylog_type @default(S)
+//   amount  Int          @default(0)
+//   map     String       @default("") @db.VarChar(11)
+
+//   @@index([type], map: "type")
+// }
+
+// enum chatlog_type {
+//   O
+//   W
+//   P
+//   G
+//   M
+//   C
+// }
+
+// // enum quest_state {
+// //    @map("0")
+// //   1 @map("1")
+// //   2 @map("2")
+// // }
+
+// enum buyingstores_sex {
+//   F
+//   M
+// }
+
+// enum cashlog_type {
+//   T
+//   V
+//   P
+//   M
+//   S
+//   N
+//   D
+//   C
+//   A
+//   E
+//   I
+//   B
+//   // $ @map("$")
+// }
+
+// enum login_sex {
+//   M
+//   F
+//   S
+// }
+
+// enum picklog_type {
+//   M
+//   P
+//   L
+//   T
+//   V
+//   S
+//   N
+//   C
+//   A
+//   R
+//   G
+//   E
+//   B
+//   O
+//   I
+//   X
+//   D
+//   U
+//   // $ @map("$")
+//   F
+//   Y
+//   Z
+//   Q
+//   H
+//   J
+//   W
+//   // 0 @map("0")
+//   // 1 @map("1")
+//   // 2 @map("2")
+// }
+
+// enum vendings_sex {
+//   F
+//   M
+// }
+
+// enum cashlog_cash_type {
+//   O
+//   K
+//   C
+// }
+
+// enum zenylog_type {
+//   T
+//   V
+//   P
+//   M
+//   S
+//   N
+//   D
+//   C
+//   A
+//   E
+//   I
+//   B
+//   K
+//   J
+//   X
+//   // 0 @map("0")
+//   // 2 @map("2")
+// }
+
+// enum feedinglog_type {
+//   P
+//   H
+//   O
+// }
+
+// enum char_sex {
+//   M
+//   F
+// }
