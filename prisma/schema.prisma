@@ -30,11 +30,6 @@ model login {
   donate_level           Int       @default(0)
   web_auth_token         String?   @unique(map: "web_auth_token_key") @db.VarChar(17)
   web_auth_token_enabled Int       @default(0) @db.TinyInt
-  facebookname           String?   @db.Text
-  facebooklink           String?   @db.VarChar(255)
-  facebookphoto          String?   @db.Text
-  last_unique_id         Int       @default(0) @db.UnsignedInt
-  blocked_unique_id      Int       @default(0) @db.UnsignedInt
 }
 
 model donate {

@@ -30,14 +30,12 @@ const createLogin = async (req, res) => {
     let user_pass = req.body.user_pass;
     let email = req.body.email;
     let birthdate = req.body.birthdate;
-    let facebokname = req.body.facebook_name;
     const result = await prisma.login.create({
       data: {
         userid: userid,
         user_pass: user_pass,
         email: email,
         birthdate: new Date(`${birthdate}`).toISOString(),
-        facebook_name: facebokname,
       },
     });
     res.status(201).json({ message: "Created successfully" });
