@@ -1,5 +1,7 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+const JWT = require("jsonwebtoken");
+const secret = process.env.SECRET;
 
 const getLogin = async (req, res) => {
   try {
@@ -47,19 +49,44 @@ const createLogin = async (req, res) => {
 
 const userLogin = async (req, res) => {
   try {
-    let userid = req.body.userid;
-    let user_pass = req.body.user_pass;
-    const result = await prisma.login.findUnique({
+    let userid = req.body.username;
+    let user_pass = req.body.password;
+    const result = await prisma.login.findMany({
       where: {
         userid: userid,
         user_pass: user_pass,
       },
     });
-    res.status(200).json(result);
+    if (result.length == 0) {
+      res.status(404).json({ message: "User not found" });
+    } else {
+      const token = JWT.sign(
+        {
+          account_id: result[0].account_id,
+          email: result[0].email,
+          userid: result[0].userid,
+        },
+        secret,
+        { expiresIn: "1h" }
+      );
+
+      let body = {
+        account_id: result[0].account_id,
+        userid: result[0].userid,
+        email: result[0].email,
+      };
+      res.status(200).json({
+        token: token,
+        user: body,
+        message: "Login Success",
+      });
+    }
   } catch (error) {
+    
     res.status(500).json(error);
   }
 };
+
 
 const userChangePassword = async (req, res) => {
   try {

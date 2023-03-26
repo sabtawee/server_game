@@ -60,11 +60,16 @@ const Authen = async (req, res) => {
           email: decoded.email,
         },
       });
-      console.log(user[0].userid);
+      const body = {
+        account_id: user[0].account_id,
+        userid: user[0].userid,
+        email: user[0].email,
+        birthdate: user[0].birthdate,
+      }
       if (user) {
         res.status(200).json({
           message: "Authen Success",
-          userid: user[0].userid,
+          userid: body,
         });
       }
     }
